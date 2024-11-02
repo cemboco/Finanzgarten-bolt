@@ -5,7 +5,9 @@ import { BudgetDistribution } from './components/BudgetDistribution';
 import { TransactionForm } from './components/TransactionForm';
 import { TransactionList } from './components/TransactionList';
 import { ProfilePage } from './components/ProfilePage';
+import { PreciousMetalsPage } from './components/PreciousMetalsPage';
 import { Transaction, Profile } from './types/finance';
+import { AnimatePresence, motion } from 'framer-motion';
 
 function App() {
   const [profile, setProfile] = useState<Profile>({
@@ -21,7 +23,7 @@ function App() {
     savingsGoals: [],
   });
 
-  const [currentView, setCurrentView] = useState<'dashboard' | 'profile'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'profile' | 'metals'>('dashboard');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const handleTransaction = (newTransaction: Omit<Transaction, 'id'>) => {
@@ -60,13 +62,15 @@ function App() {
     }));
   };
 
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <Header onViewChange={setCurrentView} currentView={currentView} />
-      
-      <main className="container mx-auto px-4 py-8">
-        {currentView === 'dashboard' ? (
-          <>
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
             <Dashboard profile={profile} transactions={transactions} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-8">
@@ -78,14 +82,42 @@ function App() {
                 onDelete={handleDeleteTransaction}
               />
             </div>
-          </>
-        ) : (
-          <ProfilePage 
-            profile={profile} 
-            transactions={transactions}
-            onUpdateProfile={handleUpdateProfile}
-          />
-        )}
+          </motion.div>
+        );
+      case 'profile':
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+          >
+            <ProfilePage 
+              profile={profile} 
+              transactions={transactions}
+              onUpdateProfile={handleUpdateProfile}
+            />
+          </motion.div>
+        );
+      case 'metals':
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+          >
+            <PreciousMetalsPage />
+          </motion.div>
+        );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-200">
+      <Header onViewChange={setCurrentView} currentView={currentView} />
+      <main className="container mx-auto px-4 py-8">
+        <AnimatePresence mode="wait">
+          {renderCurrentView()}
+        </AnimatePresence>
       </main>
     </div>
   );
