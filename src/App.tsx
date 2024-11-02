@@ -53,6 +53,13 @@ function App() {
     }
   };
 
+  const handleUpdateProfile = (updates: Partial<Profile>) => {
+    setProfile(prev => ({
+      ...prev,
+      ...updates,
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Header onViewChange={setCurrentView} currentView={currentView} />
@@ -73,7 +80,11 @@ function App() {
             </div>
           </>
         ) : (
-          <ProfilePage profile={profile} transactions={transactions} />
+          <ProfilePage 
+            profile={profile} 
+            transactions={transactions}
+            onUpdateProfile={handleUpdateProfile}
+          />
         )}
       </main>
     </div>
