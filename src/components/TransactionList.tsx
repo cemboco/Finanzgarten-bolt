@@ -11,8 +11,8 @@ export function TransactionList({ transactions, onDelete }: TransactionListProps
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
       <h2 className="text-xl font-bold mb-4">Transaktionen</h2>
-      <div className="space-y-4">
-        {transactions.map((transaction) => (
+      <div className="space-y-4 max-h-[600px] overflow-y-auto">
+        {transactions.slice(0, 10).map((transaction) => (
           <div
             key={transaction.id}
             className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
