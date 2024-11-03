@@ -47,6 +47,9 @@ export function SpendingChart({ transactions }: SpendingChartProps) {
     plugins: {
       legend: {
         position: 'bottom' as const,
+        labels: {
+          color: 'rgb(55, 65, 81)',
+        },
       },
       tooltip: {
         callbacks: {
@@ -60,8 +63,8 @@ export function SpendingChart({ transactions }: SpendingChartProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
-      <h2 className="text-xl font-bold mb-6">Wo gibst du dein Geld aus?</h2>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Wo gibst du dein Geld aus?</h2>
       <div className="w-full max-w-md mx-auto">
         <Pie data={data} options={options} />
       </div>
