@@ -14,18 +14,18 @@ export function BudgetDistribution({ profile }: BudgetDistributionProps) {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
-      <h2 className="text-xl font-bold mb-4">Budget Verteilung</h2>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Budget Verteilung</h2>
       <div className="space-y-4">
         {categories.map((category) => (
           <div key={category.name}>
             <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium text-gray-700">{category.name}</span>
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{category.name}</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 €{category.amount.toFixed(2)} ({category.percentage}%)
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
               <div
                 className={`${category.color} h-2.5 rounded-full`}
                 style={{ width: `${category.percentage}%` }}
