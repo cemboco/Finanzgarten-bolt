@@ -30,15 +30,15 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6">
-      <h2 className="text-xl font-bold mb-4">Neue Transaktion</h2>
+    <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Neue Transaktion</h2>
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Typ</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Typ</label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value as 'income' | 'expense')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           >
             <option value="income">Einnahme</option>
             <option value="expense">Ausgabe</option>
@@ -46,35 +46,35 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Betrag (€)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Betrag (€)</label>
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
             step="0.01"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Beschreibung</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Beschreibung</label>
           <input
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
 
         {type === 'expense' && (
           <div>
-            <label className="block text-sm font-medium text-gray-700">Kategorie</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategorie</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               required
             >
               <option value="">Wähle eine Kategorie</option>
@@ -87,12 +87,12 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Tags (kommagetrennt)</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Tags (kommagetrennt)</label>
           <input
             type="text"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             placeholder="z.B. Lebensmittel, Restaurant, Transport"
           />
         </div>
