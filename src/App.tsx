@@ -5,11 +5,24 @@ import { BudgetDistribution } from './components/BudgetDistribution';
 import { TransactionForm } from './components/TransactionForm';
 import { TransactionList } from './components/TransactionList';
 import { ProfilePage } from './components/ProfilePage';
-import { PreciousMetalsPage } from './components/PreciousMetalsPage';
 import { Transaction, Profile } from './types/finance';
 import { AnimatePresence, motion } from 'framer-motion';
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') || 'light';
+    }
+    return 'light';
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   const [profile, setProfile] = useState<Profile>({
     currentBalance: 5000,
     monthlyIncome: 3500,
@@ -23,7 +36,7 @@ function App() {
     savingsGoals: [],
   });
 
-  const [currentView, setCurrentView] = useState<'dashboard' | 'profile' | 'metals'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'profile'>('dashboard');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const handleTransaction = (newTransaction: Omit<Transaction, 'id'>) => {
@@ -62,6 +75,10 @@ function App() {
     }));
   };
 
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
   const renderCurrentView = () => {
     switch (currentView) {
       case 'dashboard':
@@ -70,9 +87,10 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
+            className="max-w-7xl mx-auto"
           >
             <Dashboard profile={profile} transactions={transactions} />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
               <div className="space-y-8">
                 <TransactionForm onSubmit={handleTransaction} />
                 <BudgetDistribution profile={profile} />
@@ -90,6 +108,7 @@ function App() {
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
+            className="max-w-7xl mx-auto"
           >
             <ProfilePage 
               profile={profile} 
@@ -98,22 +117,17 @@ function App() {
             />
           </motion.div>
         );
-      case 'metals':
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-          >
-            <PreciousMetalsPage />
-          </motion.div>
-        );
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-200">
-      <Header onViewChange={setCurrentView} currentView={currentView} />
+      <Header 
+        onViewChange={setCurrentView} 
+        currentView={currentView} 
+        theme={theme}
+        onThemeToggle={toggleTheme}
+      />
       <main className="container mx-auto px-4 py-8">
         <AnimatePresence mode="wait">
           {renderCurrentView()}
