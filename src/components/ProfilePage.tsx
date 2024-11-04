@@ -116,9 +116,9 @@ export function ProfilePage({ profile, transactions, onUpdateProfile }: ProfileP
       </div>
 
       {/* Total Expenses Card */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold mb-4">Gesamtausgaben</h2>
-        <p className="text-3xl font-bold text-red-600">€{totalExpenses.toFixed(2)}</p>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Gesamtausgaben</h2>
+        <p className="text-3xl font-bold text-red-600 dark:text-red-400">€{totalExpenses.toFixed(2)}</p>
       </div>
 
       {/* Spending Chart */}
