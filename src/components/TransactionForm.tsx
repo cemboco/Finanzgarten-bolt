@@ -10,7 +10,7 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
   const [amount, setAmount] = useState('');
   const [type, setType] = useState<'income' | 'expense'>('expense');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('fixed');
   const [tags, setTags] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -20,7 +20,13 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
       type,
       date: new Date().toISOString(),
       description,
-      category: type === 'expense' ? { id: category, name: category, type: 'fixed', budget: 0, spent: 0 } : undefined,
+      category: type === 'expense' ? { 
+        id: category, 
+        name: category, 
+        type: category as 'fixed' | 'needs' | 'wants' | 'savings', 
+        budget: 0, 
+        spent: 0 
+      } : undefined,
       tags: tags ? tags.split(',').map(tag => tag.trim()) : undefined
     });
     
@@ -82,7 +88,6 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
               className="w-full px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-200"
               required
             >
-              <option value="">Wähle eine Kategorie</option>
               <option value="fixed">Fixkosten</option>
               <option value="needs">Bedürfnisse</option>
               <option value="wants">Wünsche</option>
