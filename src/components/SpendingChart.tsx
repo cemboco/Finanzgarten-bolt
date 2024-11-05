@@ -10,33 +10,30 @@ interface SpendingChartProps {
 }
 
 export function SpendingChart({ transactions }: SpendingChartProps) {
-  const spendingByCategory = transactions
+  const categories = {
+    fixed: { label: 'Fixkosten', color: 'rgba(54, 162, 235, 0.8)', border: 'rgba(54, 162, 235, 1)', amount: 0 },
+    needs: { label: 'Bedürfnisse', color: 'rgba(75, 192, 192, 0.8)', border: 'rgba(75, 192, 192, 1)', amount: 0 },
+    wants: { label: 'Wünsche', color: 'rgba(255, 206, 86, 0.8)', border: 'rgba(255, 206, 86, 1)', amount: 0 },
+    savings: { label: 'Sparen', color: 'rgba(153, 102, 255, 0.8)', border: 'rgba(153, 102, 255, 1)', amount: 0 }
+  };
+
+  // Calculate spending for each category
+  transactions
     .filter(t => t.type === 'expense' && t.category)
-    .reduce((acc, curr) => {
-      const category = curr.category!.type;
-      acc[category] = (acc[category] || 0) + curr.amount;
-      return acc;
-    }, {} as Record<string, number>);
+    .forEach(transaction => {
+      const categoryType = transaction.category?.type || 'fixed';
+      if (categoryType in categories) {
+        categories[categoryType as keyof typeof categories].amount += transaction.amount;
+      }
+    });
 
   const data = {
-    labels: Object.keys(spendingByCategory).map(cat => 
-      cat.charAt(0).toUpperCase() + cat.slice(1)
-    ),
+    labels: Object.values(categories).map(cat => cat.label),
     datasets: [
       {
-        data: Object.values(spendingByCategory),
-        backgroundColor: [
-          'rgba(54, 162, 235, 0.8)',
-          'rgba(75, 192, 192, 0.8)',
-          'rgba(255, 206, 86, 0.8)',
-          'rgba(153, 102, 255, 0.8)',
-        ],
-        borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(153, 102, 255, 1)',
-        ],
+        data: Object.values(categories).map(cat => cat.amount),
+        backgroundColor: Object.values(categories).map(cat => cat.color),
+        borderColor: Object.values(categories).map(cat => cat.border),
         borderWidth: 1,
       },
     ],
@@ -48,14 +45,19 @@ export function SpendingChart({ transactions }: SpendingChartProps) {
       legend: {
         position: 'bottom' as const,
         labels: {
-          color: 'rgb(55, 65, 81)',
+          color: document.documentElement.classList.contains('dark') ? '#fff' : '#374151',
+          font: {
+            size: 12,
+          },
         },
       },
       tooltip: {
         callbacks: {
           label: function(context: any) {
             const value = context.raw;
-            return `€${value.toFixed(2)}`;
+            const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+            return `€${value.toFixed(2)} (${percentage}%)`;
           }
         }
       }
