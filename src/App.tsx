@@ -8,6 +8,19 @@ import { ProfilePage } from './components/ProfilePage';
 import { Transaction, Profile } from './types/finance';
 import { AnimatePresence, motion } from 'framer-motion';
 
+const defaultProfile: Profile = {
+  currentBalance: 5000,
+  monthlyIncome: 3500,
+  budgetDistribution: {
+    fixed: 1750,
+    needs: 1050,
+    wants: 350,
+    savings: 350,
+  },
+  categories: [],
+  savingsGoals: [],
+};
+
 function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
@@ -18,6 +31,16 @@ function App() {
     return 'light';
   });
 
+  const [profile, setProfile] = useState<Profile>(() => {
+    const savedProfile = localStorage.getItem('profile');
+    return savedProfile ? JSON.parse(savedProfile) : defaultProfile;
+  });
+
+  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+    const savedTransactions = localStorage.getItem('transactions');
+    return savedTransactions ? JSON.parse(savedTransactions) : [];
+  });
+
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
@@ -25,21 +48,15 @@ function App() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const [profile, setProfile] = useState<Profile>({
-    currentBalance: 5000,
-    monthlyIncome: 3500,
-    budgetDistribution: {
-      fixed: 1750,
-      needs: 1050,
-      wants: 350,
-      savings: 350,
-    },
-    categories: [],
-    savingsGoals: [],
-  });
+  useEffect(() => {
+    localStorage.setItem('profile', JSON.stringify(profile));
+  }, [profile]);
+
+  useEffect(() => {
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+  }, [transactions]);
 
   const [currentView, setCurrentView] = useState<'dashboard' | 'profile'>('dashboard');
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const handleTransaction = (newTransaction: Omit<Transaction, 'id'>) => {
     const transaction: Transaction = {
@@ -47,7 +64,7 @@ function App() {
       id: Date.now().toString(),
     };
 
-    setTransactions([transaction, ...transactions]);
+    setTransactions(prevTransactions => [transaction, ...prevTransactions]);
     
     setProfile(prev => ({
       ...prev,
@@ -66,7 +83,7 @@ function App() {
           transaction.type === 'income' ? transaction.amount : -transaction.amount
         ),
       }));
-      setTransactions(transactions.filter(t => t.id !== id));
+      setTransactions(prevTransactions => prevTransactions.filter(t => t.id !== id));
     }
   };
 
