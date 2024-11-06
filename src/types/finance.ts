@@ -6,6 +6,9 @@ export interface Transaction {
   description: string;
   category?: Category;
   tags?: string[];
+  isRecurring?: boolean;
+  recurrence?: 'weekly' | 'monthly' | 'yearly';
+  nextDueDate?: string;
 }
 
 export interface Category {
