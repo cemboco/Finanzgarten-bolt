@@ -5,6 +5,7 @@ import { SavingsGoals } from './SavingsGoals';
 import { CategoryManager } from './CategoryManager';
 import { TransactionFilters } from './TransactionFilters';
 import { SpendingChart } from './SpendingChart';
+import { FinancialCalendar } from './FinancialCalendar';
 
 interface ProfilePageProps {
   profile: Profile;
@@ -114,6 +115,9 @@ export function ProfilePage({ profile, transactions, onUpdateProfile }: ProfileP
           )}
         </div>
       </div>
+
+      {/* Financial Calendar */}
+      <FinancialCalendar transactions={transactions} />
 
       {/* Total Expenses Card */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
