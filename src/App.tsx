@@ -108,7 +108,11 @@ function App() {
             exit={{ opacity: 0, y: -20 }}
             className="max-w-7xl mx-auto"
           >
-            <Dashboard profile={profile} transactions={transactions} />
+            <Dashboard 
+              profile={profile} 
+              transactions={transactions}
+              onUpdateProfile={handleUpdateProfile}
+            />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
               <div className="space-y-8">
                 <TransactionForm onSubmit={handleTransaction} />
@@ -146,6 +150,8 @@ function App() {
         currentView={currentView} 
         theme={theme}
         onThemeToggle={toggleTheme}
+        profile={profile}
+        transactions={transactions}
       />
       <main className="container mx-auto px-4 py-8">
         <AnimatePresence mode="wait">
