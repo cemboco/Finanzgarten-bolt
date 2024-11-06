@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, RepeatIcon } from 'lucide-react';
 import { Transaction } from '../types/finance';
 
 interface TransactionFormProps {
@@ -12,6 +12,9 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('fixed');
   const [tags, setTags] = useState('');
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [recurrence, setRecurrence] = useState<'weekly' | 'monthly' | 'yearly'>('monthly');
+  const [nextDueDate, setNextDueDate] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,12 +30,17 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
         budget: 0, 
         spent: 0 
       } : undefined,
-      tags: tags ? tags.split(',').map(tag => tag.trim()) : undefined
+      tags: tags ? tags.split(',').map(tag => tag.trim()) : undefined,
+      isRecurring,
+      recurrence: isRecurring ? recurrence : undefined,
+      nextDueDate: isRecurring ? nextDueDate : undefined
     });
     
     setAmount('');
     setDescription('');
     setTags('');
+    setIsRecurring(false);
+    setNextDueDate('');
   };
 
   return (
@@ -106,6 +114,52 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
             placeholder="z.B. Lebensmittel, Restaurant, Transport"
             maxLength={100}
           />
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="isRecurring"
+              checked={isRecurring}
+              onChange={(e) => setIsRecurring(e.target.checked)}
+              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label htmlFor="isRecurring" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+              Wiederkehrende Transaktion
+            </label>
+          </div>
+
+          {isRecurring && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Wiederholung
+                </label>
+                <select
+                  value={recurrence}
+                  onChange={(e) => setRecurrence(e.target.value as 'weekly' | 'monthly' | 'yearly')}
+                  className="w-full px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-200"
+                >
+                  <option value="weekly">Wöchentlich</option>
+                  <option value="monthly">Monatlich</option>
+                  <option value="yearly">Jährlich</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Nächstes Datum
+                </label>
+                <input
+                  type="date"
+                  value={nextDueDate}
+                  onChange={(e) => setNextDueDate(e.target.value)}
+                  className="w-full px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-200"
+                  required={isRecurring}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <button
